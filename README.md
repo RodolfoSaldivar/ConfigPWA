@@ -32,22 +32,20 @@ module.exports = function override(config, env) {
 
 <img src="/img/02.png" width="200">
 
-Create a custom service worker inside the "src" folder named "sw.js".<br />
-[In this document](https://gecgithub01.walmart.com/PBPD/pbpd-docs/blob/master/Spikes/Custom%20Service%20Worker.md) you can see the code's detailed description.
+Create a custom service worker inside the "src" folder named "sw.js".
 ```
-workbox.skipWaiting()
-workbox.clientsClaim()
+self.skipWaiting()
 
 workbox.routing.registerRoute(
   new RegExp('https:.*min\.(css|js)'),
-  workbox.strategies.staleWhileRevalidate({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'cdn-cache'
   })
 )
 
 workbox.routing.registerRoute(
   new RegExp('.*\.json'),
-  workbox.strategies.networkFirst()
+  new workbox.strategies.NetworkFirst()
 )
 
 self.addEventListener('fetch', event => {
@@ -65,12 +63,13 @@ self.addEventListener('fetch', event => {
 })
 
 self.addEventListener('push', event => {
-  event.waitUntil(self.registration.showNotification('Todo List', {
-    icon: '/icon-120.png',
+  event.waitUntil(self.registration.showNotification('PLUM', {
+    icon: '/walmartLogo.png',
     body: event.data.text()
   }))
 })
 
+// Comment to prevent PWA to cache the app
 workbox.precaching.precacheAndRoute(self.__precacheManifest || [])
 ```
 
